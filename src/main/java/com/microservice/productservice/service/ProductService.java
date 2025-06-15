@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,15 +88,16 @@ public class ProductService {
 		// productRequest
 		Product updatedProduct = null;
 		// step1
-		Optional<Product> product = productDao.findById(productId);
-		// step2
-		product.get().setProductName(productRequest.getProductName());
-		product.get().setPrice(productRequest.getPrice());
-		product.get().setProductQuantity(productRequest.getProductQuantity());
-		product.get().setDescription(productRequest.getDescription());
+                Product product = productDao.findById(productId)
+                                .orElseThrow(() -> new EntityNotFoundException("Product not found with id: " + productId));
+                // step2 - update fields
+                product.setProductName(productRequest.getProductName());
+                product.setPrice(productRequest.getPrice());
+                product.setProductQuantity(productRequest.getProductQuantity());
+                product.setDescription(productRequest.getDescription());
 
-		// step3
-		updatedProduct = productDao.save(product.get());
+                // step3
+                updatedProduct = productDao.save(product);
 
 		return updatedProduct;
 

@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.microservice.productservice.model.Product;
 import com.microservice.productservice.request.ProductRequest;
 import com.microservice.productservice.service.ProductService;
+import javax.persistence.EntityNotFoundException;
 
 
 
@@ -88,16 +89,21 @@ public class ProductController {
 		return ResponseEntity.ok().body("The product id " + productId + " got deleted!");
 	}
 
-	@PutMapping(value = "/update/{productId}")
-	public ResponseEntity<?> updateProduct(@RequestBody ProductRequest productRequest,
-			@PathVariable("productId") Long productId) {
-		// take productrequest which contains new data to update and productId which is
-		// used to fetch old data from datbase
-		// call updateProduct of productService class
-		logger.info("updateProduct API has started");
-		Product product = productService.updateProduct(productRequest, productId);
-		return ResponseEntity.ok().body(product);
-	}
+        @PutMapping(value = "/update/{productId}")
+        public ResponseEntity<?> updateProduct(@RequestBody ProductRequest productRequest,
+                        @PathVariable("productId") Long productId) {
+                // take productrequest which contains new data to update and productId which is
+                // used to fetch old data from datbase
+                // call updateProduct of productService class
+                logger.info("updateProduct API has started");
+                try {
+                        Product product = productService.updateProduct(productRequest, productId);
+                        return ResponseEntity.ok().body(product);
+                } catch (EntityNotFoundException ex) {
+                        logger.error("Product not found", ex);
+                        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+                }
+        }
 
 	/*
 	 * when there are large data in database we cannot load whole result rather we
