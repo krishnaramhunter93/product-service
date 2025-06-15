@@ -134,7 +134,7 @@ public class ProductController {
 	@PostMapping(value = "/savelist")
 	public ResponseEntity<?> saveListOfProducts(@RequestBody List<ProductRequest> productRequests) {
 		logger.info("saveListOfProducts API has started");
-		List<Product> productList = productService.createListOfProdcuts(productRequests);
+               List<Product> productList = productService.createListOfProducts(productRequests);
 		return ResponseEntity.ok().body(productList);
 	}
 }

@@ -121,7 +121,7 @@ public class ProductService {
 	// calls createProduct and save it in database 
 	// same step is repeated for all products in the list
 	// and it return list of saved product
-	public List<Product> createListOfProdcuts(List<ProductRequest> productRequests) {
+       public List<Product> createListOfProducts(List<ProductRequest> productRequests) {
 		List<Product> products = new ArrayList<>();
 		for(ProductRequest prodReq : productRequests) {
 			Product prod = createProduct(prodReq);
